@@ -9,8 +9,8 @@ from repositories import cars_repo
 
 router = APIRouter(
     prefix="/cars",
-    tags=["cars"],
-    dependencies=[Depends(JWTBearer())],
+    tags=["Cars"],
+    # dependencies=[Depends(JWTBearer())],
     responses={404: {"data": "not found!"}}
 )
 
@@ -49,9 +49,9 @@ def get_car_by_id(car_id: int, db: Session = Depends(get_db)):
 
 # create
 @router.post("/create_car", response_model=cars_schema.ResultData, status_code=status.HTTP_201_CREATED)
-def create_car(car: cars_schema.CarBase, db: Session = Depends(get_db)):
+def create_car(car: cars_schema.CarCreate, db: Session = Depends(get_db)):
     try:
-        car_created = cars_repo.create_cars_repo(car=car, db=db)
+        car_created = cars_repo.create_cars_repo(car=car,  db=db)
         if car_created:
             return {"status": True, "message": "created!", "data": car_created}
     except HTTPException as e:
@@ -76,5 +76,4 @@ def delete_car(car_id: int, db: Session = Depends(get_db)):
         return {"status": True, "message": "deleted!", "data": deleted_car}
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
-
 

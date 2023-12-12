@@ -9,8 +9,15 @@ class CarBase(BaseModel):
     province: str
 
 
+class CarCreate(CarBase):
+    owner_id: int
+
+
+class Car(CarBase):
+    id: int
+
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[CarBase, list[CarBase], int, str, None]
+    data: Union[CarBase, list[CarBase], Car, int, str, None]
 

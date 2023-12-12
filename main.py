@@ -3,7 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from dependencies.authen_jwt import sign_jwt
 from databases.database import engine
 from models import model
-from routes.cars_router import router as car_router
+from routes.cars_router import router as cars_router
+from routes.members_router import router as members_router
+from routes.member_type_router import router as member_type_router
+
 import uvicorn
 
 
@@ -20,7 +23,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(car_router)
+app.include_router(cars_router)
+app.include_router(members_router)
+app.include_router(member_type_router)
 
 
 @app.get("/")

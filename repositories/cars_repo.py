@@ -4,7 +4,7 @@ from schemas import cars_schema
 from models import model
 
 
-def create_cars_repo(car: cars_schema.CarBase, db: Session):
+def create_cars_repo(car: cars_schema.CarCreate, db: Session):
     create_car = model.Car(**car.model_dump())
     db.add(create_car)  # add เขียว
     db.commit()  # save
@@ -14,7 +14,7 @@ def create_cars_repo(car: cars_schema.CarBase, db: Session):
 
 def get_all_cars_repo(skip: int, take: int, db: Session):
     cars = db.query(model.Car).order_by(model.Car.id).offset(skip).limit(take).all()
-    if cars:
+    if cars is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No car in database")
     return cars
 
