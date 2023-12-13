@@ -1,8 +1,12 @@
+from dotenv import load_dotenv
 import time
 import jwt
+import os
 
-JWT_SECRET = "P@ssw0rd"
-JWT_ALGORITHM = "HS256"
+load_dotenv()
+
+JWT_SECRET = os.getenv("JWT_SECRET")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
 
 
 def sign_jwt(user_id: str):

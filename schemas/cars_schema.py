@@ -16,8 +16,9 @@ class CarCreate(CarBase):
 class Car(CarBase):
     id: int
 
+
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[CarBase, list[CarBase], Car, int, str, None]
+    data: Union[Car, list[Car], int, str, None]
 

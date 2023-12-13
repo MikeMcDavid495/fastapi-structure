@@ -52,17 +52,16 @@ def get_car_by_id(car_id: int, db: Session = Depends(get_db)):
 def create_car(car: cars_schema.CarCreate, db: Session = Depends(get_db)):
     try:
         car_created = cars_repo.create_cars_repo(car=car,  db=db)
-        if car_created:
-            return {"status": True, "message": "created!", "data": car_created}
+        return {"status": True, "message": "created!", "data": car_created}
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
 
 
 # update
 @router.put("/update_car", response_model=cars_schema.ResultData, status_code=status.HTTP_200_OK)
-def update_car(car: cars_schema.CarBase, car_id: int, db: Session = Depends(get_db)):
+def update_car(car: cars_schema.CarCreate, db: Session = Depends(get_db)):
     try:
-        car_updated = cars_repo.update_car_repo(car=car, db=db, car_id=car_id)
+        car_updated = cars_repo.update_car_repo(car=car, db=db)
         return {"status": True, "message": "updated!", "data": car_updated}
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
