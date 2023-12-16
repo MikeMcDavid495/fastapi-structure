@@ -10,10 +10,13 @@ class Member(Base):
     first_name = Column(VARCHAR(length=35))
     last_name = Column(VARCHAR(length=50))
     id_card = Column(VARCHAR(length=13))
+
     member_id = Column(Integer, ForeignKey("member_type.id"))
+    member_of_parking = Column(VARCHAR(length=10), ForeignKey("parkings.parking_code"))
 
     member_type_id = relationship("MemberType", back_populates="member_type_id")
     cars_owned = relationship("Car", back_populates="owner")
+    parking = relationship("Parking", back_populates="member")
 
 
 class MemberType(Base):
@@ -38,3 +41,15 @@ class Car(Base):
     owner = relationship("Member", back_populates="cars_owned")
     # license_plate = Column(NVARCHAR(length=10))
     # province = Column(NVARCHAR(length=100))
+
+
+class Parking(Base):
+    __tablename__ = "parkings"
+
+    id = Column(Integer, index=True)
+    parking_code = Column(VARCHAR(length=10), primary_key=True)
+    parking_name = Column(VARCHAR(length=60))
+    location = Column(VARCHAR(length=150))
+    parking_bays = Column(Integer)
+
+    member = relationship("Member", back_populates="parking")

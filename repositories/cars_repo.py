@@ -21,7 +21,7 @@ def create_cars_repo(car: cars_schema.CarCreate, db: Session):
 
 def get_all_cars_repo(skip: int, take: int, db: Session):
     cars = db.query(model.Car).order_by(model.Car.id).offset(skip).limit(take).all()
-    if cars is None:
+    if not cars:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No car in database")
     return cars
 
@@ -49,3 +49,10 @@ def delete_car_repo(car_id: int, db: Session):
     db.delete(delete_car)
     db.commit()
     return f'Car id: {car_id} has been deleted!'
+
+
+def get_member_by_license_plate_repo(license_plate: str, db: Session):
+    member = (db.query(model.Member).join(model.Car, id == model.Car.owner_id)
+              .filter(model.Car.license_plate == license_plate))
+    return member
+

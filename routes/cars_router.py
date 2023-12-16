@@ -76,3 +76,12 @@ def delete_car(car_id: int, db: Session = Depends(get_db)):
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
 
+
+@router.get("/get_member_by_license_plate", status_code=status.HTTP_200_OK)
+def get_member_by_license_plate(license_plate: str, db: Session = Depends(get_db)):
+    try:
+        member = cars_repo.get_member_by_license_plate_repo(license_plate=license_plate, db=db)
+        return member
+    except HTTPException as e:
+        return JSONResponse(status_code=e.status_code, content=content_return_error(e))
+

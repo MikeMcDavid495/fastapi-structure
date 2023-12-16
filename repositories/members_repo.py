@@ -32,3 +32,18 @@ def add_member_repo(member: members_schema.MemberCreate, db: Session):
     db.refresh(create_member)
     return create_member
 
+
+def update_member_repo(member_update: members_schema.MemberUpdate, db: Session):
+    db_member = db.query(model.Member).filter_by(id=member_update.member_id).first()
+    if db_member is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Member ID not found!")
+
+    # for key in member_update:
+    #     if key.__dict__.values() is not None:
+    #         db_member[key.__dict__.keys()] = member_update[key.__dict__.keys()]
+
+    db.commit()
+    db.refresh(db_member)
+
+    return member_update.member_id
+

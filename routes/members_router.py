@@ -53,3 +53,11 @@ def add_member(member: members_schema.MemberCreate, db: Session = Depends(get_db
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
 
+
+@router.patch("/update_member", response_model=members_schema.ResultData, status_code=status.HTTP_200_OK)
+def update_member(member_update: members_schema.MemberUpdate, db: Session = Depends(get_db)):
+    try:
+        update_firstname = members_repo.update_member_repo(member_update=member_update, db=db)
+        return {"status": True, "message": "member added!", "data": update_firstname}
+    except HTTPException as e:
+        return JSONResponse(status_code=e.status_code, content=content_return_error(e))

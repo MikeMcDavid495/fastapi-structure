@@ -12,6 +12,13 @@ class MemberBase(BaseModel):
     id_card: Annotated[str, StringConstraints(min_length=13, max_length=13)]
 
 
+class MemberUpdate(BaseModel):
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
+    id_card: Annotated[str, StringConstraints(min_length=13, max_length=13)] = None
+    member_id: int = None
+
+
 class MemberCreate(MemberBase):
     member_id: int
 
