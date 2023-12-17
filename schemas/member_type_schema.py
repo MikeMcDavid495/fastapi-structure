@@ -18,3 +18,4 @@ class ResultData(BaseModel):
     status: bool
     message: str
     data: Union[MemberType, str, int, None]
+

@@ -7,8 +7,11 @@ LIMIT_CARS = 2
 
 
 def create_cars_repo(car: cars_schema.CarCreate, db: Session):
-    owned_cars = db.query(model.Car).filter_by(owner_id=car.owner_id).all()
+    car_owner = db.query(model.Member).filter_by(id=car.owner_id).first()
+    if car_owner is None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This member is not available")
 
+    owned_cars = db.query(model.Car).filter_by(owner_id=car.owner_id).all()
     if len(owned_cars) >= LIMIT_CARS:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This member reached limit car owned")
 
@@ -54,5 +57,8 @@ def delete_car_repo(car_id: int, db: Session):
 def get_member_by_license_plate_repo(license_plate: str, db: Session):
     member = (db.query(model.Member).join(model.Car, id == model.Car.owner_id)
               .filter(model.Car.license_plate == license_plate))
+    x = 0
+    x = x + 1
+    print(x)
     return member
 

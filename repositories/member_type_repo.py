@@ -20,5 +20,5 @@ def create_member_type_repo(member_type: member_type_schema.MemberTypeCreate, db
     db.add(created_type)
     db.commit()
     db.refresh(created_type)
-    return member_type
+    return created_type
 

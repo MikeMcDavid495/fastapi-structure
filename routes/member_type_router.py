@@ -40,6 +40,7 @@ def get_member_type(type_id: int, db: Session = Depends(get_db)):
 def create_member_type(member_type: member_type_schema.MemberTypeCreate, db: Session = Depends(get_db)):
     try:
         member_type = member_type_repo.create_member_type_repo(member_type=member_type, db=db)
-        return {"status": True, "message": "get data completed!", "data": member_type}
+        return {"status": True, "message": "created", "data": member_type}
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
+

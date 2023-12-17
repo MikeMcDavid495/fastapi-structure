@@ -1,9 +1,12 @@
+import datetime
+
 from pydantic import BaseModel, StringConstraints
 from typing import Union, Annotated
 from numbers import Real
 
 from schemas.cars_schema import CarBase, Car
 from schemas.member_type_schema import MemberType
+from schemas.parking_master_schema import ParkingMaster
 
 
 class MemberBase(BaseModel):
@@ -21,15 +24,19 @@ class MemberUpdate(BaseModel):
 
 class MemberCreate(MemberBase):
     member_id: int
+    member_of_parking: str
+    expiry_date: datetime.date
 
 
 class Member(MemberBase):
     id: int
     member_type_id: MemberType
     cars_owned: list[Car]
+    parking: ParkingMaster
 
 
 class ResultData(BaseModel):
     status: bool
     message: str
     data: Union[Member, int, str, None]
+
