@@ -4,7 +4,7 @@ from dependencies.authen_bearer import JWTBearer
 from sqlalchemy.orm import Session
 from databases.database import SessionLocal
 
-from schemas import cars_schema
+from schemas import cars_schema, members_schema
 from repositories import cars_repo
 
 router = APIRouter(
@@ -77,11 +77,11 @@ def delete_car(car_id: int, db: Session = Depends(get_db)):
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
 
 
-@router.get("/get_member_by_license_plate", status_code=status.HTTP_200_OK)
+@router.get("/get_member_by_license_plate", response_model=members_schema.ResultData, status_code=status.HTTP_200_OK)
 def get_member_by_license_plate(license_plate: str, db: Session = Depends(get_db)):
     try:
         member = cars_repo.get_member_by_license_plate_repo(license_plate=license_plate, db=db)
-        return member
+        return {"status": True, "message": "completed", "data": member}
     except HTTPException as e:
         return JSONResponse(status_code=e.status_code, content=content_return_error(e))
 

@@ -1,7 +1,9 @@
 from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
-from schemas import cars_schema
+from sqlalchemy.orm import Session, defer
+from schemas import cars_schema, members_schema
 from models import model
+
+import json
 
 LIMIT_CARS = 2
 
@@ -55,10 +57,28 @@ def delete_car_repo(car_id: int, db: Session):
 
 
 def get_member_by_license_plate_repo(license_plate: str, db: Session):
-    member = (db.query(model.Member).join(model.Car, id == model.Car.owner_id)
-              .filter(model.Car.license_plate == license_plate))
-    x = 0
-    x = x + 1
-    print(x)
-    return member
+    member = db.query(model.Member).join(model.Car).filter(model.Car.license_plate == license_plate).first()
+    car = (
+        db.query(model.Car)
+        .join(model.Member)
+        .filter(model.Member.member_of_parking == "BL100" and model.Car.license_plate == license_plate)
+        .options(defer(model.Car.owner_id)).first()
+    )
+    data = (
+        db.query(model.Car, model.Member)
+        .filter(model.Member.id == 1)
+        .first()
+    )
+
+    car_model = cars_schema.Car(**data[0].__dict__)
+    member_model = members_schema.MemberBase(**data[1].__dict__)
+    # data_x = {**data[0].__dict__, **data[1].__dict__}
+    # print(car_model)
+    # print(member_model)
+    # print(data_x)
+    # print({**car_model.model_dump(), **member_model.model_dump()})
+
+    gigi_data = {**car_model.model_dump(), **member_model.model_dump()}
+
+    return gigi_data
 

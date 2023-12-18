@@ -10,8 +10,8 @@ from models import model
 from routes.cars_router import router as cars_router
 from routes.members_router import router as members_router
 from routes.member_type_router import router as member_type_router
-from routes.orders_router import router as orders_router
-from routes.parking_master_router import router as parking_master_order
+from routes.parking_master_router import router as parking_master
+from routes.parking_fee_setting_router import router as parking_fee_setting_router
 
 import uvicorn
 
@@ -32,8 +32,8 @@ app.add_middleware(
 app.include_router(cars_router)
 app.include_router(members_router)
 app.include_router(member_type_router)
-app.include_router(orders_router)
-app.include_router(parking_master_order)
+app.include_router(parking_master)
+app.include_router(parking_fee_setting_router)
 
 
 @app.exception_handler(RequestValidationError)

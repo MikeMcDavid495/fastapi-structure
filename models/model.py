@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, String, Integer, DateTime, Date, Column, NVARCHAR, VARCHAR, ForeignKey, UUID, TIMESTAMP
+from sqlalchemy import (Boolean, String, Integer, DateTime, Date, Numeric,
+                        Column, NVARCHAR, VARCHAR, ForeignKey, UUID, TIMESTAMP, DECIMAL)
 from sqlalchemy.orm import relationship
 from sqlalchemy import Identity
 from databases.database import Base
@@ -64,8 +65,8 @@ class ParkingMaster(Base):
 class ParkingFeeSetting(Base):
     __tablename__ = "parking_fee_setting"
 
-    pf_id = Column(Integer, primary_key=True, index=True)
-    parking_code = Column(VARCHAR(length=10), ForeignKey("parking_master.parking_code"))
+    pf_id = Column(Integer, Identity(), index=True, unique=True)
+    parking_code = Column(VARCHAR(length=10), ForeignKey("parking_master.parking_code"), primary_key=True)
     pf_hour_01 = Column(Integer)
     pf_hour_02 = Column(Integer)
     pf_hour_03 = Column(Integer)
@@ -93,17 +94,30 @@ class ParkingFeeSetting(Base):
     pf_day = Column(Integer)
     pf_month = Column(Integer)
     created_at = Column(DateTime, default=datetime.now())
-    deleted_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
 
     parking_fee = relationship("ParkingMaster", back_populates="parking_setting")
 
 
-class Order(Base):
-    __tablename__ = "orders"
+class Parking(Base):
+    __tablename__ = "parkings"
 
-    id = Column(UUID, primary_key=True, default=str(uuid.uuid4()))
-    entry_timestamp = Column(TIMESTAMP, default=datetime.now())
-    name = Column(String)
-
+    p_id = Column(Integer, primary_key=True, index=True)
+    parking_code = Column(VARCHAR(length=10))
+    p_license_plate = Column(VARCHAR(length=10))
+    p_qr_code = Column(VARCHAR(length=100))
+    p_time_in = Column(DateTime)
+    p_license_plate_time_in_img_location = Column(VARCHAR(length=100))
+    p_time_out = Column(DateTime)
+    p_time_out_expiry_time = Column(DateTime)
+    p_license_plate_time_out_img_location = Column(VARCHAR(length=100))
+    p_amount_exc_vat = Column(Numeric(10, 2))
+    p_vat = Column(Numeric(10, 2))
+    p_amount_inc_vat = Column(Numeric(10, 2))
+    p_waived_flag = Column(Boolean)
+    member_id = Column(Integer)
+    created_at = Column(DateTime, default=datetime.now().timestamp())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
 

@@ -35,8 +35,12 @@ class Member(MemberBase):
     parking: ParkingMaster
 
 
+class UnionCarMember(MemberBase, Car):
+    pass
+
+
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[Member, int, str, None]
+    data: Union[UnionCarMember, Member, Car, int, str, None]
 
