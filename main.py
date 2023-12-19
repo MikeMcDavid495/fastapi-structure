@@ -7,11 +7,12 @@ from dependencies.authen_jwt import sign_jwt
 from databases.database import engine
 from models import model
 
-from routes.cars_router import router as cars_router
-from routes.members_router import router as members_router
-from routes.member_type_router import router as member_type_router
-from routes.parking_master_router import router as parking_master
-from routes.parking_fee_setting_router import router as parking_fee_setting_router
+from routes.router_cars import router as cars_router
+from routes.router_members import router as members_router
+from routes.router_member_type import router as member_type_router
+from routes.router_parking_master import router as parking_master
+from routes.router_parking_fee_setting import router as parking_fee_setting_router
+from routes.router_parkings import router as parkings_router
 
 import uvicorn
 
@@ -34,6 +35,7 @@ app.include_router(members_router)
 app.include_router(member_type_router)
 app.include_router(parking_master)
 app.include_router(parking_fee_setting_router)
+app.include_router(parkings_router)
 
 
 @app.exception_handler(RequestValidationError)

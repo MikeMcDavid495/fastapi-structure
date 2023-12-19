@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from schemas import parking_fee_setting_schema
+from schemas import schema_parking_fee_setting
 from models import model
 
 
-def parking_fee_create_repo(parking_fee: parking_fee_setting_schema.ParkingFeeSettingCreate, db: Session):
+def parking_fee_create_repo(parking_fee: schema_parking_fee_setting.ParkingFeeSettingCreate, db: Session):
     create_parking_fee = model.ParkingFeeSetting(**parking_fee.model_dump())
     db.add(create_parking_fee)
     db.commit()

@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, defer
-from schemas import cars_schema, members_schema
+from schemas import schema_cars, schema_members
 from models import model
 
 import json
@@ -8,7 +8,7 @@ import json
 LIMIT_CARS = 2
 
 
-def create_cars_repo(car: cars_schema.CarCreate, db: Session):
+def create_cars_repo(car: schema_cars.CarCreate, db: Session):
     car_owner = db.query(model.Member).filter_by(id=car.owner_id).first()
     if car_owner is None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This member is not available")
@@ -37,7 +37,7 @@ def get_car_by_id_repo(car_id: int, db: Session):
     return car
 
 
-def update_car_repo(car: cars_schema.CarCreate, db: Session):
+def update_car_repo(car: schema_cars.CarCreate, db: Session):
     if (car_update := db.query(model.Car).filter_by(id=car.owner_id).first()) is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Car not found")
 
@@ -70,8 +70,8 @@ def get_member_by_license_plate_repo(license_plate: str, db: Session):
         .first()
     )
 
-    car_model = cars_schema.Car(**data[0].__dict__)
-    member_model = members_schema.MemberBase(**data[1].__dict__)
+    car_model = schema_cars.Car(**data[0].__dict__)
+    member_model = schema_members.MemberBase(**data[1].__dict__)
     # data_x = {**data[0].__dict__, **data[1].__dict__}
     # print(car_model)
     # print(member_model)
