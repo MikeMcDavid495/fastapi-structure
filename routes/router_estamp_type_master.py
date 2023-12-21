@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from databases.database import SessionLocal
 
 from schemas import schema_estamp_type_master as setm
-from repositories import repo_stamp_type_master as rstm
+from repositories import repo_estamp_type_master as rstm
 
 
 router = APIRouter(
