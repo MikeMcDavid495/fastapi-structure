@@ -1,16 +1,19 @@
 from pydantic import BaseModel, Field
 from typing import Union, Annotated, Optional
 from datetime import datetime
+import uuid
+
+from schemas.schema_members import Member
 
 
 class ParkingBase(BaseModel):
     parking_code: str
     p_license_plate: str
-    p_qr_code: str
-    member_id: int
+    p_qr_code: Optional[str] = None
 
 
 class ParkingCreate(ParkingBase):
+    uuid: str
     p_time_in: datetime
     p_license_plate_time_in_img_location: str
     p_time_out: Optional[datetime] = None
@@ -20,7 +23,8 @@ class ParkingCreate(ParkingBase):
     p_vat: float
     p_amount_inc_vat: float
     p_waived_flag: bool
-
+    member_id: int | None
+    member_type_id: int
 
 
 class ParkingUpdate(BaseModel):
@@ -37,5 +41,5 @@ class Parking(ParkingCreate):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[Parking, int, str, dict, None]
+    data: Union[Parking, Member, int, str, dict, None]
 

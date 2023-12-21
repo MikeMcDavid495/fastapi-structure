@@ -5,7 +5,7 @@ from schemas import schema_member_type
 
 
 def get_member_type(type_id: int, db: Session):
-    member_type = db.query(model.MemberType).filter_by(id=type_id).first()
+    member_type = db.query(model.MemberType).filter_by(member_type_id=type_id).first()
     if member_type is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="member type not found!")
     return member_type

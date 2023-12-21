@@ -23,7 +23,7 @@ def get_member_repo(member_id:int, db: Session):
 
 
 def add_member_repo(member: schema_members.MemberCreate, db: Session):
-    if not db.query(model.MemberType).filter_by(id=member.member_id).first():
+    if not db.query(model.MemberType.member_type_id).filter_by(member_type_id=member.member_type_id).scalar():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Member Type ID not found!")
 
     create_member = model.Member(**member.model_dump())

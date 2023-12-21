@@ -3,6 +3,7 @@ from typing import Union
 
 
 class MemberTypeBase(BaseModel):
+    member_type_id: int
     member_type_name: str
 
 

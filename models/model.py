@@ -1,7 +1,6 @@
 from sqlalchemy import (Boolean, String, Integer, DateTime, Date, Numeric,
-                        Column, NVARCHAR, VARCHAR, ForeignKey, UUID, TIMESTAMP, DECIMAL)
+                        Column, NVARCHAR, VARCHAR, ForeignKey, UUID, TIMESTAMP, DECIMAL, Identity)
 from sqlalchemy.orm import relationship
-from sqlalchemy import Identity
 from databases.database import Base
 from datetime import datetime
 import uuid
@@ -16,10 +15,10 @@ class Member(Base):
     id_card = Column(VARCHAR(length=13))
     expiry_date = Column(Date, default=datetime.now().date())
 
-    member_id = Column(Integer, ForeignKey("member_type.id"))
+    member_type_id = Column(Integer, ForeignKey("member_type.member_type_id"))
     member_of_parking = Column(VARCHAR(length=10), ForeignKey("parking_master.parking_code"))
 
-    member_type_id = relationship("MemberType", back_populates="member_type_id")
+    r_member_type_id = relationship("MemberType", back_populates="r_member_type_id")
     cars_owned = relationship("Car", back_populates="owner")
     parking = relationship("ParkingMaster", back_populates="member")
 
@@ -27,10 +26,11 @@ class Member(Base):
 class MemberType(Base):
     __tablename__ = "member_type"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, Identity(start=0), primary_key=True, index=True)
+    member_type_id = Column(Integer, unique=True)
     member_type_name = Column(VARCHAR(length=20))
 
-    member_type_id = relationship("Member", back_populates="member_type_id")
+    r_member_type_id = relationship("Member", back_populates="r_member_type_id")
 
 
 class Car(Base):
@@ -51,9 +51,9 @@ class Car(Base):
 class ParkingMaster(Base):
     __tablename__ = "parking_master"
 
-    id = Column(Integer, Identity(), index=True, unique=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    parking_code = Column(VARCHAR(length=10), primary_key=True)
+    parking_code = Column(VARCHAR(length=10), unique=True)
     parking_name = Column(VARCHAR(length=60))
     location = Column(VARCHAR(length=150))
     parking_bays = Column(Integer)
@@ -65,8 +65,8 @@ class ParkingMaster(Base):
 class ParkingFeeSetting(Base):
     __tablename__ = "parking_fee_setting"
 
-    pf_id = Column(Integer, Identity(), index=True, unique=True)
-    parking_code = Column(VARCHAR(length=10), ForeignKey("parking_master.parking_code"), primary_key=True)
+    pf_id = Column(Integer, primary_key=True, autoincrement=True)
+    parking_code = Column(VARCHAR(length=10), ForeignKey("parking_master.parking_code"))
     pf_hour_01 = Column(Integer)
     pf_hour_02 = Column(Integer)
     pf_hour_03 = Column(Integer)
@@ -103,10 +103,11 @@ class ParkingFeeSetting(Base):
 class Parking(Base):
     __tablename__ = "parkings"
 
-    p_id = Column(Integer, primary_key=True, index=True)
+    p_id = Column(Integer, primary_key=True, autoincrement=True)
+    uuid = Column(VARCHAR(length=36), default=str(uuid.uuid4()), unique=True)
     parking_code = Column(VARCHAR(length=10))
     p_license_plate = Column(VARCHAR(length=10))
-    p_qr_code = Column(VARCHAR(length=100))
+    p_qr_code = Column(VARCHAR(length=100), nullable=True)
     p_time_in = Column(DateTime)
     p_license_plate_time_in_img_location = Column(VARCHAR(length=100))
     p_time_out = Column(DateTime, default=None)
@@ -116,9 +117,107 @@ class Parking(Base):
     p_vat = Column(Numeric(10, 2))
     p_amount_inc_vat = Column(Numeric(10, 2))
     p_waived_flag = Column(Boolean)
-    member_id = Column(Integer, ForeignKey("members.id"))
+    member_id = Column(Integer, ForeignKey("members.id"), nullable=True)
+    member_type_id = Column(Integer, ForeignKey("member_type.member_type_id"))
     created_at = Column(DateTime, default=datetime.now())
     deleted_at = Column(DateTime, default=None)
     updated_at = Column(DateTime, default=None)
 
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+
+    t_id = Column(Integer, primary_key=True)
+    uuid = Column(VARCHAR(length=36), ForeignKey("parkings.uuid"))
+    paym_id = Column(Integer, ForeignKey("payment_master.paym_id"))
+    t_paid_amount = Column(DECIMAL(10, 2))
+    t_paid_datetime = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.now())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
+
+
+class PaymentMaster(Base):
+    __tablename__ = "payment_master"
+
+    paym_id = Column(Integer, primary_key=True)
+    paym_code = Column(VARCHAR(length=10))
+    paym_name_th = Column(VARCHAR(length=50))
+    paym_name_en = Column(VARCHAR(length=50))
+    active_flag = Column(Boolean)
+    created_at = Column(DateTime, default=datetime.now())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
+
+
+class Estamps(Base):
+    __tablename__ = "estamps"
+
+    e_id = Column(Integer, primary_key=True)
+    uuid = Column(VARCHAR(length=36), ForeignKey("parkings.uuid"))
+    esta_id = Column(Integer, ForeignKey("estamp_master.esta_id"))
+    created_at = Column(DateTime, default=datetime.now())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
+
+
+class EstampMaster(Base):
+    __tablename__ = "estamp_master"
+
+    esta_id = Column(Integer, primary_key=True)
+    esta_t_id = Column(Integer, ForeignKey("estamp_type_master.esta_t_id"))
+    esta_code = Column(VARCHAR(length=10))
+    esta_name_th = Column(VARCHAR(length=50))
+    esta_name_en = Column(VARCHAR(length=50))
+    active_flag = Column(Boolean)
+    created_at = Column(DateTime, default=datetime.now())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
+
+
+class EstampTypeMaster(Base):
+    __tablename__ = "estamp_type_master"
+
+    esta_t_id = Column(Integer, primary_key=True)
+    esta_t_name = Column(VARCHAR(length=50))
+    active_flag = Column(Boolean)
+    created_at = Column(DateTime, default=datetime.now())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
+
+
+class EstampFeeSetting(Base):
+    __tablename__ = 'estamp_fee_setting'
+
+    ef_id = Column(Integer, primary_key=True, autoincrement=True)
+    esta_id = Column(Integer, ForeignKey("estamp_master.esta_id"))
+    ef_hour_01 = Column(Integer)
+    ef_hour_02 = Column(Integer)
+    ef_hour_03 = Column(Integer)
+    ef_hour_04 = Column(Integer)
+    ef_hour_05 = Column(Integer)
+    ef_hour_06 = Column(Integer)
+    ef_hour_07 = Column(Integer)
+    ef_hour_08 = Column(Integer)
+    ef_hour_09 = Column(Integer)
+    ef_hour_10 = Column(Integer)
+    ef_hour_11 = Column(Integer)
+    ef_hour_12 = Column(Integer)
+    ef_hour_13 = Column(Integer)
+    ef_hour_14 = Column(Integer)
+    ef_hour_15 = Column(Integer)
+    ef_hour_16 = Column(Integer)
+    ef_hour_17 = Column(Integer)
+    ef_hour_18 = Column(Integer)
+    ef_hour_19 = Column(Integer)
+    ef_hour_20 = Column(Integer)
+    ef_hour_21 = Column(Integer)
+    ef_hour_22 = Column(Integer)
+    ef_hour_23 = Column(Integer)
+    ef_hour_24 = Column(Integer)
+    ef_day = Column(Integer)
+    ef_month = Column(Integer)
+    created_at = Column(DateTime, default=datetime.now())
+    deleted_at = Column(DateTime, default=None)
+    updated_at = Column(DateTime, default=None)
 

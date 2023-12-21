@@ -16,7 +16,7 @@ class MemberBase(BaseModel):
 
 
 class MemberCreate(MemberBase):
-    member_id: int
+    member_type_id: int
     member_of_parking: str
     expiry_date: datetime.date
 
@@ -52,7 +52,11 @@ class MemberUpdate(BaseModel):
 
 class Member(MemberBase):
     id: int
-    member_type_id: MemberType
+    expiry_date: datetime.date
+
+
+class MemberAll(Member):
+    r_member_type_id: MemberType
     cars_owned: list[Car]
     parking: ParkingMaster
 
