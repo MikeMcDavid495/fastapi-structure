@@ -4,18 +4,7 @@ from models import model
 from sqlalchemy.orm import Session
 
 
-def create_car_for_member_repo(owner_id: int, car: schema_cars.CarBase, db: Session):
-    try:
-        db_car = model.Car(**car.model_dump(), owner_car_id=owner_id)
-        db.add(db_car)
-        db.commit()
-        db.refresh(db_car)
-        return db_car
-    except HTTPException as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="error")
-
-
-def get_member_repo(member_id:int, db: Session):
+def get_member_repo(member_id: int, db: Session):
     member = db.query(model.Member).filter_by(id=member_id).first()
     if member is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="this member id is not available")

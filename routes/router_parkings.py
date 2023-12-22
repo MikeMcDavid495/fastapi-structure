@@ -59,16 +59,16 @@ def entrance_kiosk(tr_in: schema_parkings.ParkingBase, db: Session = Depends(get
 def stamp_transaction_out(tr_out: schema_parkings.ParkingUpdate, db: Session = Depends(get_db)):
     try:
         transaction_out = repo_parkings.stamp_transaction_out_repo(tr_out=tr_out, db=db)
-        return {"status": True, "message": "created", "data": transaction_out}
+        return {"status": True, "message": "success", "data": transaction_out}
     except HTTPException as e:
         return JSONResponse(content_return_error(e))
 
 
-@router.get("/payment", response_model=schema_parkings.ResultData, status_code=status.HTTP_200_OK)
+@router.get("/calculate", response_model=schema_parkings.ResultData, status_code=status.HTTP_200_OK)
 def total_expenses(tr_uuid: str, parking_code: str, db: Session = Depends(get_db)):
     try:
         total = repo_parkings.total_expenses(tr_uuid=tr_uuid, parking_code=parking_code, db=db)
-        return {"status": True, "message": "created", "data": total}
+        return {"status": True, "message": "success", "data": total}
     except HTTPException as e:
         return JSONResponse(content_return_error(e))
 

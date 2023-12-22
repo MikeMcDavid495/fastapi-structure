@@ -144,7 +144,7 @@ class PaymentMaster(Base):
     paym_code = Column(VARCHAR(length=10))
     paym_name_th = Column(VARCHAR(length=50))
     paym_name_en = Column(VARCHAR(length=50))
-    active_flag = Column(Boolean)
+    active_flag = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.now())
     deleted_at = Column(DateTime, default=None)
     updated_at = Column(DateTime, default=None)
@@ -220,4 +220,15 @@ class EstampFeeSetting(Base):
     created_at = Column(DateTime, default=datetime.now())
     deleted_at = Column(DateTime, default=None)
     updated_at = Column(DateTime, default=None)
+
+
+class EventLogs(Base):
+    __tablename__ = "event_logs"
+
+    e_id = Column(Integer, primary_key=True, index=True)
+    e_type = Column(VARCHAR(length=15))
+    e_table = Column(VARCHAR(length=40))
+    e_field = Column(VARCHAR(length=30))
+    e_key_id = Column(VARCHAR(length=50))
+    created_at = Column(DateTime, default=datetime.now())
 

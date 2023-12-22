@@ -15,6 +15,8 @@ from routes.router_parking_fee_setting import router as parking_fee_setting_rout
 from routes.router_parkings import router as parkings_router
 from routes.router_estamp_master import router as estamp_master_router
 from routes.router_estamp_type_master import router as estamp_type_master_router
+from routes.router_payment_master import router as payment_master_router
+
 
 import uvicorn
 
@@ -32,12 +34,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(cars_router)
-app.include_router(members_router)
-app.include_router(member_type_router)
 app.include_router(parking_master)
 app.include_router(parking_fee_setting_router)
+app.include_router(member_type_router)
+app.include_router(members_router)
+app.include_router(cars_router)
+
 app.include_router(parkings_router)
+
+app.include_router(payment_master_router)
 app.include_router(estamp_master_router)
 app.include_router(estamp_type_master_router)
 
@@ -57,9 +62,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 @app.get("/")
-def hello():
-    token = sign_jwt("mike")
-    return {"hello": "car system", "token": token}
+def hello_from_j_park():
+    # token = sign_jwt("mike")
+    return {"Welcome": "J-PARK API"}
 
 
 if __name__ == '__main__':

@@ -29,15 +29,6 @@ def content_return_error(e: HTTPException):
     return {"status": False, "message": str(e.detail), "data": None}
 
 
-@router.post("/create_car_for_member", response_model=schema_members.ResultData, status_code=status.HTTP_201_CREATED)
-def create_car_for_member(owner_id: int, car: schema_members.CarBase, db: Session = Depends(get_db)):
-    try:
-        car = repo_members.create_car_for_member_repo(owner_id=owner_id, car=car, db=db)
-        return {"status": True, "message": "created!", "data": car}
-    except HTTPException as e:
-        return JSONResponse(status_code=e.status_code, content=content_return_error(e))
-
-
 @router.get("/get_members", response_model=schema_members.ResultData, status_code=status.HTTP_200_OK)
 def get_member(member_id: int, db: Session = Depends(get_db)):
     try:
