@@ -36,7 +36,7 @@ class ParkingFeeSettingCreate(ParkingFeeSettingBase):
     parking_code: str
 
 
-class ParkingFeeSetting(ParkingFeeSettingBase):
+class ParkingFeeSetting(ParkingFeeSettingCreate):
     pf_id: int
     created_at: datetime
     deleted_at: datetime | None
@@ -46,5 +46,5 @@ class ParkingFeeSetting(ParkingFeeSettingBase):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[ParkingFeeSetting, int, str, None]
+    data: Union[ParkingFeeSetting , list[ParkingFeeSetting], int, str, None]
 

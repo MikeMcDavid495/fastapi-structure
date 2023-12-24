@@ -14,6 +14,7 @@ class PaymentMasterCreate(PaymentMasterBase):
 
 
 class PaymentMaster(PaymentMasterBase):
+    paym_id: int
     active_flag: bool = True
     created_at: datetime
     deleted_at: datetime | None
@@ -23,5 +24,5 @@ class PaymentMaster(PaymentMasterBase):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[PaymentMaster, dict, list, int, str, None]
+    data: Union[PaymentMaster, list[PaymentMaster], int, str, None]
 

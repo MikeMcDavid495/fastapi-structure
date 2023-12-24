@@ -9,6 +9,11 @@ from datetime import datetime
 import math
 
 
+def get_all_parking_repo(skip: int, take: int, db: Session):
+    parkings = db.query(model.Parking).filter(model.Parking.p_time_out == None).order_by(model.Parking.p_id).offset(skip).limit(take).all()
+    return parkings
+
+
 def entrance_repo(tr_in: schema_parkings.ParkingBase, db: Session):
     member = (db.query(model.Member)
               .join(model.Car)

@@ -4,6 +4,13 @@ from models import model
 from sqlalchemy.orm import Session
 
 
+def get_all_members_repo(skip: int, take: int, db: Session):
+    members = db.query(model.Member).order_by(model.Member.id).offset(skip).limit(take).all()
+    if not members:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found any member")
+    return members
+
+
 def get_member_repo(member_id: int, db: Session):
     member = db.query(model.Member).filter_by(id=member_id).first()
     if member is None:

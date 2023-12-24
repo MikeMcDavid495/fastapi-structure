@@ -41,5 +41,5 @@ class Parking(ParkingCreate):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[Parking, Member, int, str, dict, None]
+    data: Union[Parking, list[Parking],Member, int, str, dict, None]
 

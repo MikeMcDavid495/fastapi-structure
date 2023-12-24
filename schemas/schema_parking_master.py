@@ -19,5 +19,5 @@ class ParkingMaster(ParkingMasterCreate):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[ParkingMaster, int, str, None]
+    data: Union[ParkingMaster, list[ParkingMaster], int, str, None]
 

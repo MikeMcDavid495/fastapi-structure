@@ -27,6 +27,15 @@ def content_return_error(e: HTTPException):
     return {"status": False, "message": str(e.detail), "data": None}
 
 
+@router.get("/get_all_payment_master", response_model=scm.ResultData, status_code=status.HTTP_200_OK)
+def get_all_payment_master(db: Session = Depends(get_db)):
+    try:
+        pm = rpm.get_all_payment_master_repo(db=db)
+        return {"status": True, "message": "created", "data": pm}
+    except HTTPException as e:
+        return JSONResponse(content_return_error(e))
+
+
 @router.post("/create_payment_master", response_model=scm.ResultData, status_code=status.HTTP_201_CREATED)
 def create_payment_master(pm: scm.PaymentMasterCreate, db: Session = Depends(get_db)):
     try:

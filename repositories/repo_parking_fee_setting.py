@@ -4,6 +4,11 @@ from schemas import schema_parking_fee_setting
 from models import model
 
 
+def get_all_parking_fee_setting_repo(skip: int, take: int, db: Session):
+    parking_fee = db.query(model.ParkingFeeSetting).order_by(model.ParkingFeeSetting.pf_id).offset(skip).limit(take).all()
+    return parking_fee
+
+
 def parking_fee_create_repo(parking_fee: schema_parking_fee_setting.ParkingFeeSettingCreate, db: Session):
     parking_code = db.query(model.ParkingMaster.parking_code).filter_by(parking_code=parking_fee.parking_code).scalar()
     if parking_code is None:

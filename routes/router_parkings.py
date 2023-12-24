@@ -28,6 +28,15 @@ def content_return_error(e: HTTPException):
     return {"status": False, "message": str(e.detail), "data": None}
 
 
+@router.get("/get_all_parkings", response_model=schema_parkings.ResultData, status_code=status.HTTP_200_OK)
+def get_all_parking(skip: int = 0, take: int = 10, db: Session = Depends(get_db)):
+    try:
+        parkings = repo_parkings.get_all_parking_repo(skip=skip, take=take, db=db)
+        return {"status": True, "message": "success", "data": parkings}
+    except HTTPException as e:
+        return JSONResponse(content_return_error(e))
+
+
 @router.post("/entrance", response_model=schema_parkings.ResultData, status_code=status.HTTP_201_CREATED)
 def entrance(tr_in: schema_parkings.ParkingBase, db: Session = Depends(get_db)):
     try:

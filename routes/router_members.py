@@ -29,6 +29,15 @@ def content_return_error(e: HTTPException):
     return {"status": False, "message": str(e.detail), "data": None}
 
 
+@router.get("/get_all_members", response_model=schema_members.ResultData, status_code=status.HTTP_200_OK)
+def get_all_members(skip: int = 0, take: int = 100, db: Session = Depends(get_db)):
+    try:
+        member = repo_members.get_all_members_repo(skip=skip, take=take, db=db)
+        return {"status": True, "message": "get member completed!", "data": member}
+    except HTTPException as e:
+        return JSONResponse(status_code=e.status_code, content=content_return_error(e))
+
+
 @router.get("/get_members", response_model=schema_members.ResultData, status_code=status.HTTP_200_OK)
 def get_member(member_id: int, db: Session = Depends(get_db)):
     try:

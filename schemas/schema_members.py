@@ -68,5 +68,5 @@ class UnionCarMember(MemberBase, Car):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[UnionCarMember, Member, Car, int, str, None]
+    data: Union[UnionCarMember, Member, list[MemberAll], Car, int, str, None]
 
