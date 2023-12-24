@@ -23,5 +23,5 @@ class PaymentMaster(PaymentMasterBase):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[PaymentMaster, dict, list, int, str]
+    data: Union[PaymentMaster, dict, list, int, str, None]
 

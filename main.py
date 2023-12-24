@@ -16,6 +16,8 @@ from routes.router_parkings import router as parkings_router
 from routes.router_estamp_master import router as estamp_master_router
 from routes.router_estamp_type_master import router as estamp_type_master_router
 from routes.router_payment_master import router as payment_master_router
+from routes.router_transactions import router as transactions_router
+from routes.router_estamps import router as estamps_router
 
 
 import uvicorn
@@ -41,6 +43,8 @@ app.include_router(members_router)
 app.include_router(cars_router)
 
 app.include_router(parkings_router)
+app.include_router(transactions_router)
+app.include_router(estamps_router)
 
 app.include_router(payment_master_router)
 app.include_router(estamp_master_router)
@@ -68,5 +72,5 @@ def hello_from_j_park():
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
 

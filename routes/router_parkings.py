@@ -64,11 +64,20 @@ def stamp_transaction_out(tr_out: schema_parkings.ParkingUpdate, db: Session = D
         return JSONResponse(content_return_error(e))
 
 
-@router.get("/calculate", response_model=schema_parkings.ResultData, status_code=status.HTTP_200_OK)
-def total_expenses(tr_uuid: str, parking_code: str, db: Session = Depends(get_db)):
+@router.get("/payment", response_model=schema_parkings.ResultData, status_code=status.HTTP_200_OK)
+def payment(qrcode: str, db: Session = Depends(get_db)):
     try:
-        total = repo_parkings.total_expenses(tr_uuid=tr_uuid, parking_code=parking_code, db=db)
-        return {"status": True, "message": "success", "data": total}
+        result = repo_parkings.parking_calculation(qrcode=qrcode, db=db)
+        return {"status": result["status"], "message": result["message"], "data": result["data"]}
     except HTTPException as e:
-        return JSONResponse(content_return_error(e))
+        return content_return_error(e)
+
+
+# @router.get("/calculate", response_model=schema_parkings.ResultData, status_code=status.HTTP_200_OK)
+# def total_expenses(tr_uuid: str, parking_code: str, db: Session = Depends(get_db)):
+#     try:
+#         total = repo_parkings.total_expenses(tr_uuid=tr_uuid, parking_code=parking_code, db=db)
+#         return {"status": True, "message": "success", "data": total}
+#     except HTTPException as e:
+#         return JSONResponse(content_return_error(e))
 

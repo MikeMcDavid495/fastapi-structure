@@ -28,7 +28,7 @@ class ParkingCreate(ParkingBase):
 
 
 class ParkingUpdate(BaseModel):
-    p_id: int
+    uuid: str
 
 
 class Parking(ParkingCreate):

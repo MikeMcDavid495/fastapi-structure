@@ -131,7 +131,7 @@ class Transaction(Base):
     uuid = Column(VARCHAR(length=36), ForeignKey("parkings.uuid"))
     paym_id = Column(Integer, ForeignKey("payment_master.paym_id"))
     t_paid_amount = Column(DECIMAL(10, 2))
-    t_paid_datetime = Column(DateTime)
+    t_paid_datetime = Column(DateTime, default=datetime.now())
     created_at = Column(DateTime, default=datetime.now())
     deleted_at = Column(DateTime, default=None)
     updated_at = Column(DateTime, default=None)
