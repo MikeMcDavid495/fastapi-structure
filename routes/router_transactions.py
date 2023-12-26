@@ -27,6 +27,15 @@ def content_return_error(e: HTTPException):
     return {"status": False, "message": str(e.detail), "data": None}
 
 
+@router.get("/get_all_transactions", response_model=st.ResultData, status_code=status.HTTP_200_OK)
+def get_all_transactions(skip: int = 0, take: int = 50, db: Session = Depends(get_db)):
+    try:
+        transactions = rt.get_all_transactions_repo(skip=skip, take=take, db=db)
+        return {"status": True, "message": "success", "data": transactions}
+    except HTTPException as e:
+        return JSONResponse(content_return_error(e))
+
+
 @router.post("/create_transaction", response_model=st.ResultData, status_code=status.HTTP_201_CREATED)
 def create_transaction(tr: st.TransactionCreate, db: Session = Depends(get_db)):
     try:

@@ -27,8 +27,13 @@ class ParkingCreate(ParkingBase):
     member_type_id: int
 
 
-class ParkingUpdate(BaseModel):
-    uuid: str
+class PaymentKiosk(BaseModel):
+    parking_code: str
+    qr_code: str
+
+
+class QRCode(BaseModel):
+    qrcode: str
 
 
 class Parking(ParkingCreate):
@@ -41,5 +46,5 @@ class Parking(ParkingCreate):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[Parking, list[Parking],Member, int, str, dict, None]
+    data: Union[Parking, list[Parking], Member, datetime, int, str, dict, None]
 

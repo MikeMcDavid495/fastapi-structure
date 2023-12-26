@@ -13,7 +13,7 @@ class TransactionCreate(TransactionBase):
     pass
 
 
-class Transaction(BaseModel):
+class Transaction(TransactionBase):
     t_id: int
     t_paid_datetime: datetime
     created_at: datetime
@@ -24,5 +24,5 @@ class Transaction(BaseModel):
 class ResultData(BaseModel):
     status: bool
     message: str
-    data: Union[Transaction, dict, list, int, str, None]
+    data: Union[Transaction, list[Transaction], dict, int, str, None]
 

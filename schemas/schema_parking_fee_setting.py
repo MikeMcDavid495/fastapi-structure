@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class ParkingFeeSettingBase(BaseModel):
+    pf_grace_period: int
     pf_hour_01: int
     pf_hour_02: int
     pf_hour_03: int

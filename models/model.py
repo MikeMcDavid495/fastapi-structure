@@ -67,6 +67,7 @@ class ParkingFeeSetting(Base):
 
     pf_id = Column(Integer, primary_key=True, autoincrement=True)
     parking_code = Column(VARCHAR(length=10), ForeignKey("parking_master.parking_code"))
+    pf_grace_period = Column(Integer)
     pf_hour_01 = Column(Integer)
     pf_hour_02 = Column(Integer)
     pf_hour_03 = Column(Integer)
@@ -157,6 +158,7 @@ class Estamps(Base):
     uuid = Column(VARCHAR(length=36), ForeignKey("parkings.uuid"))
     esta_id = Column(Integer, ForeignKey("estamp_master.esta_id"))
     created_at = Column(DateTime, default=datetime.now())
+    e_amount = Column(DECIMAL(10, 2))
     deleted_at = Column(DateTime, default=None)
     updated_at = Column(DateTime, default=None)
 

@@ -1,10 +1,15 @@
-import datetime
-
 from fastapi import HTTPException, status
 from models import model
 from sqlalchemy.orm import Session
 from schemas import schema_transactions as st
-from datetime import datetime
+from datetime import datetime, timedelta
+
+from repositories import repo_parkings
+
+
+def get_all_transactions_repo(skip: int, take: int, db: Session):
+    transactions = db.query(model.Transaction).order_by(model.Transaction.t_id.desc()).offset(skip).limit(take).all()
+    return transactions
 
 
 def create_transaction_repo(tr: st.TransactionCreate, db: Session):
@@ -24,5 +29,6 @@ def create_transaction_repo(tr: st.TransactionCreate, db: Session):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     else:
         db.refresh(create_tr)
+        repo_parkings.normal_cal(tr.uuid, db)
         return create_tr
 
